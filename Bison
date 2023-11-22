@@ -1,0 +1,162 @@
+%{
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+
+
+int yylex();
+
+int yyerror(char *);
+
+
+
+extern FILE* yyin;
+
+
+
+int yydebug = 1;
+
+%}
+
+
+
+%union {
+
+  int num;
+
+  char* id;
+
+}
+
+
+
+%token <num> NUM
+
+%token <id> ID
+
+%token PRINT DO FOR IF READ WHILE FROM TO BY ELSE ASIGNACION ADD_ASSIG SUB_ASSIG MUL_ASSIG DIV_ASSIG ADD SUB MUL DIV
+
+
+
+%%
+
+
+
+stmts: stmt ';' stmts   
+
+     | stmt
+
+     ;
+
+
+
+stmt: loop
+
+    | cond
+
+    | assig
+
+    | io
+
+    ;
+
+
+
+loop: DO stmts WHILE '(' expr ')'
+
+    | FOR '(' ID FROM expr TO NUM ')' '{' stmts '}'
+
+    | FOR '(' ID FROM expr TO NUM BY NUM ')' '{' stmts '}'
+
+    ;
+
+
+
+cond: IF '(' expr ')' '{' stmts '}'
+
+    | IF '(' expr ')' '{' stmts '}' ELSE '{' stmts '}'
+
+    ;
+
+
+
+io: PRINT expr
+
+   | READ ID
+
+   ;
+
+
+
+assig: ID ASIGNACION expr
+
+     | ID ADD_ASSIG expr
+
+     | ID SUB_ASSIG expr
+
+     | ID MUL_ASSIG expr
+
+     | ID DIV_ASSIG expr
+
+     ;
+
+
+
+expr: expr ADD mult
+
+    | expr SUB mult
+
+    | mult
+
+    ;
+
+
+
+mult: mult MUL val
+
+     | mult DIV val
+
+     | val
+
+     ;
+
+
+
+val: NUM
+
+   | ID
+
+   | '(' expr ')'
+
+   ;
+
+
+
+%%
+
+
+
+
+
+
+
+int yyerror(char* msg) {
+
+  fprintf(stderr, "Error sintáctico");
+
+  return 0;
+
+}
+
+
+
+int main() {
+
+    yyparse();
+
+    return 0;
+
+}
+
