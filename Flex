@@ -1,0 +1,105 @@
+%{
+
+#include "y.tab.h"
+
+#include <ctype.h>
+
+
+
+int num; // Variable para almacenar el valor numérico de un token
+
+char* id; // Variable para almacenar el lexema de un identificador
+
+%}
+
+
+
+%option debug
+
+
+
+%%
+
+
+
+[ \n\t] 	     ;
+
+
+
+"#".* 		     ; 
+
+
+
+"print"		     { return PRINT; }
+
+"do"		     { return DO; }
+
+"for"		     { return FOR; }
+
+"if"		     { return IF; }
+
+"read"		     { return READ; }
+
+"while"		     { return WHILE; }
+
+"from"               { return FROM; }
+
+"to"		     { return TO; }
+
+"by"		     { return BY; }
+
+"else" 		     { return ELSE; }
+
+"<:"                 { return ASIGNACION; }
+
+"+="                 { return ADD_ASSIG; }
+
+"-="                 { return SUB_ASSIG; }
+
+"*="                 { return MUL_ASSIG; }
+
+"/="                 { return DIV_ASSIG; }
+
+"+"		     { return ADD; }
+
+"-"		     { return SUB; }
+
+"*"		     { return MUL; }
+
+"/"		     { return DIV; }
+
+
+
+
+
+[0-9]+		     { 
+
+                       num = atoi(yytext); 
+
+                       return NUM; 
+
+              	     }
+
+[a-zA-Z]+ 	     { id = strdup(yytext);
+
+		       return ID;  
+
+		     }
+
+
+
+.	             return yytext[0];
+
+
+
+%%
+
+
+
+/*int main() {
+
+    yylex();
+
+    return 0;
+
+}*/
