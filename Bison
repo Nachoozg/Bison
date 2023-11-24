@@ -90,9 +90,17 @@ loop: DO {$<etiq>$=getNextNumber(); printf("LBL%d:\n",$<etiq>$); } stmts WHILE '
 
 
 
-cond: IF '(' expr ')' '{' stmts '}'
+cond: IF '(' expr ')' { $<etiq>$=getNextNumber(); printf("\tsifalsovea LBL%d\n", $<etiq>$); } '{' stmts '}' elseopcional 
 
-    | IF '(' expr ')' '{' stmts '}' ELSE '{' stmts '}'
+      ;
+
+
+
+elseopcional:
+
+    ELSE '{' stmts '}'
+
+    |
 
     ;
 
@@ -106,23 +114,23 @@ io: PRINT expr { printf("\tprint\n"); }
 
 
 
-assig: ID { printf("\tvalori %s (en assig)\n", $1); } ASIGNACION  expr { printf("\tasigna (en assig)\n"); }  
+assig: ID { printf("\tvalori %s\n", $1); } ASIGNACION  expr { printf("\tasigna \n"); }  
 
-     | ID ADD_ASSIG { printf("\tvalori %s (en assig)\n", $1); } { printf("\tvalord %s\n", $1); } expr { printf("\tadd\n"); } { printf("\tasigna (en assig)\n"); }
+     | ID { printf("\tvalori %s\n", $1); } ADD_ASSIG  { printf("\tvalord %s\n", $1); } expr { printf("\tadd\n"); } { printf("\tasigna\n"); }
 
-     | ID SUB_ASSIG { printf("\tvalori %s (en assig)\n", $1); } { printf("\tvalord %s\n", $1); } expr { printf("\tsub\n"); } { printf("\tasigna (en assig)\n"); }
+     | ID { printf("\tvalori %s\n", $1); } SUB_ASSIG  { printf("\tvalord %s\n", $1); } expr { printf("\tsub\n"); } { printf("\tasigna\n"); }
 
-     | ID MUL_ASSIG { printf("\tvalori %s (en assig)\n", $1); } { printf("\tvalord %s\n", $1); } expr { printf("\tmul\n"); } { printf("\tasigna (en assig)\n"); }
+     | ID { printf("\tvalori %s\n", $1); } MUL_ASSIG  { printf("\tvalord %s\n", $1); } expr { printf("\tmul\n"); } { printf("\tasigna\n"); }
 
-     | ID DIV_ASSIG { printf("\tvalori %s (en assig)\n", $1); } { printf("\tvalord %s\n", $1); } expr { printf("\tdiv\n"); } { printf("\tasigna (en assig)\n"); }
+     | ID { printf("\tvalori %s\n", $1); } DIV_ASSIG  { printf("\tvalord %s\n", $1); } expr { printf("\tdiv\n"); } { printf("\tasigna\n"); }
 
      ;
 
 
 
-expr: expr ADD mult { printf("\tadd\n"); }	   // Detrás de val o delante el add
+expr: expr ADD mult { printf("\tadd\n"); }	   
 
-    | expr SUB mult { printf("\tsub\n"); }	   // Detrás de val o delante el sub
+    | expr SUB mult { printf("\tsub\n"); }	   
 
     | mult
 
@@ -130,9 +138,9 @@ expr: expr ADD mult { printf("\tadd\n"); }	   // Detrás de val o delante el add
 
 
 
-mult:  mult MUL val { printf("\tmul\n"); }         // Detrás de val o delante el mul
+mult:  mult MUL val { printf("\tmul\n"); }         
 
-     | mult DIV val { printf("\tdiv\n"); }         // Detrás de val o delante el div
+     | mult DIV val { printf("\tdiv\n"); }         
 
      | val
 
@@ -142,7 +150,7 @@ mult:  mult MUL val { printf("\tmul\n"); }         // Detrás de val o delante e
 
 val: NUM   { printf("\tmete %d\n", $1); }
 
-   | ID	   { printf("\tvalord %s (en val)\n", $1); }
+   | ID	   { printf("\tvalord %s\n", $1); }
 
    | '(' expr ')'
 
@@ -156,5 +164,27 @@ val: NUM   { printf("\tmete %d\n", $1); }
 
 int yyerror(char *s){printf("%s\n",s);}
 
-int main(){ yyparse(); }
+int main(int argc, char **argv){ 
+
+		if(argc > 1) {
+
+				FILE *file;
+
+				file=fopen(argv[1], "r");
+
+				if(!file) {
+
+					fprintf(stderr, "no se puede abrir %s\n", argv[1]);
+
+					exit(1);
+
+				}
+
+				yyin = file;
+
+			} 
+
+			yyparse(); 
+
+	  }
 
