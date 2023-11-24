@@ -80,17 +80,47 @@ stmt: loop
 
 
 
-loop: DO {$<etiq>$=getNextNumber(); printf("LBL%d:\n",$<etiq>$); } stmts WHILE '(' expr ')' {$<etiq>$=getNextNumber(); printf("\tsifalsovea LBL%d\n",$<etiq>$); printf("\tvea LBL%d\n",$<etiq>$); printf("LBL%d: \n",$<etiq>$); }
+loop: DO {$<etiq>$=getNextNumber(); printf("LBL%d:\n",$<etiq>$); } stmts WHILE '(' expr ')' {$<etiq>$=getNextNumber(); printf("\tsifalsovea LBL%d\n",$<etiq>$); printf("\tvea LBL%d\n",$<etiq>2); printf("LBL%d: \n",$<etiq>$); }
 
-    | FOR '(' ID FROM expr TO NUM ')' '{' stmts '}'
+    | FOR '(' ID { printf("\tvalori %s\n", $3); }  FROM expr TO NUM bynumopcional ')' { printf("\tasigna\n"); } '{' { $<etiq>$=getNextNumber(); printf("LBL%d:\n", $<etiq>$); } 
 
-    | FOR '(' ID FROM expr TO NUM BY NUM ')' '{' stmts '}'
+    stmts {     $<etiq>$=getNextNumber(); printf("\tvalori %s\n", $3); 
+
+    		printf("\tvalord %s\n", $3); 
+
+    		printf("\tmete 1\n");  // Mete 1 poner de alguna forma
+
+    		printf("\tadd\n"); 
+
+    		printf("\tasigna\n"); 
+
+    		printf("\tmete %d\n", $8); 
+
+    		printf("\tvalord %s\n", $3); 
+
+    		printf("\tsub\n"); 
+
+    		printf("\tsifalsovea LBL%d\n", $<etiq>$); 
+
+    		printf("\tvea LBL%d\n", $<etiq>$); 
+
+    		printf("LBL%d:\n", $<etiq>$); } '}'
+
+    ;
+
+    
+
+bynumopcional:
+
+    BY NUM
+
+    |
 
     ;
 
 
 
-cond: IF '(' expr ')' { $<etiq>$=getNextNumber(); printf("\tsifalsovea LBL%d\n", $<etiq>$); } '{' stmts '}' elseopcional 
+cond: IF '(' expr ')' { $<etiq>$=getNextNumber(); } { printf("\tsifalsovea LBL%d\n", $<etiq>5); } '{' stmts '}' elseopcional 
 
       ;
 
@@ -98,9 +128,9 @@ cond: IF '(' expr ')' { $<etiq>$=getNextNumber(); printf("\tsifalsovea LBL%d\n",
 
 elseopcional:
 
-    ELSE '{' stmts '}'
+    ELSE { $<etiq>$=getNextNumber(); printf("\tvea LBL%d\n", $<etiq>$); } { printf("LBL%d:\n", $<etiq>-4); } '{' stmts '}' { printf("LBL%d:\n", $<etiq>2); }
 
-    |
+    | { printf("LBL%d:\n", $<etiq>-4); }
 
     ;
 
