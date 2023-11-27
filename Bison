@@ -80,43 +80,147 @@ stmt: loop
 
 
 
-loop: DO {$<etiq>$=getNextNumber(); printf("LBL%d:\n",$<etiq>$); } stmts WHILE '(' expr ')' {$<etiq>$=getNextNumber(); printf("\tsifalsovea LBL%d\n",$<etiq>$); printf("\tvea LBL%d\n",$<etiq>2); printf("LBL%d: \n",$<etiq>$); }
 
-    | FOR '(' ID { printf("\tvalori %s\n", $3); }  FROM expr TO NUM bynumopcional ')' { printf("\tasigna\n"); } '{' { $<etiq>$=getNextNumber(); printf("LBL%d:\n", $<etiq>$); } 
 
-    stmts {     $<etiq>$=getNextNumber(); printf("\tvalori %s\n", $3); 
+loop:
 
-    		printf("\tvalord %s\n", $3); 
+    DO 
 
-    		printf("\tmete 1\n");  // Mete 1 poner de alguna forma
+    {$<etiq>$=getNextNumber();}
 
-    		printf("\tadd\n"); 
+    {printf("LBL%d:\n",$<etiq>2);}
 
-    		printf("\tasigna\n"); 
+    stmts 
 
-    		printf("\tmete %d\n", $8); 
+    WHILE 
 
-    		printf("\tvalord %s\n", $3); 
+    '(' expr ')' 
 
-    		printf("\tsub\n"); 
+    {$<etiq>$=getNextNumber();}
 
-    		printf("\tsifalsovea LBL%d\n", $<etiq>$); 
+    {printf("\tsifalsovea LBL %d\n",$<etiq>9);}
 
-    		printf("\tvea LBL%d\n", $<etiq>$); 
+    {printf("\tvea LBL %d\n",$<etiq>2);}
 
-    		printf("LBL%d:\n", $<etiq>$); } '}'
+    {printf("LBL%d:\n",$<etiq>9);}
+
+    
+
+    
+
+    | FOR '(' ID impValori FROM expr TO NUM ')' 
+
+    etiquetaInicio 
+
+    etiquetaFinal 
+
+    {printf("\tasigna\n");}
+
+    '{' {printf("LBL%d:\n",$<etiq>10);} stmts '}' 
+
+    imprimeSinByNum  
+
+    
+
+    | FOR '(' ID impValori FROM expr TO NUM BY NUM ')' 
+
+    etiquetaInicio 
+
+    etiquetaFinal 
+
+    {printf("\tasigna\n");}
+
+    '{' {printf("LBL%d:\n",$<etiq>12);} stmts '}' 
+
+    imprimeConByNum  
+
+    ;
+
+
+
+impValori:
+
+    {printf("\tvalori %s\n", $<id>0);}
+
+    ;
+
+
+
+etiquetaInicio:
+
+    {$<etiq>$=getNextNumber();}
 
     ;
 
     
 
-bynumopcional:
+etiquetaFinal:
 
-    BY NUM
-
-    |
+    {$<etiq>$=getNextNumber();}
 
     ;
+
+
+
+imprimeSinByNum:
+
+    {printf("\tvalori %s\n", $<id>-13);}
+
+    {printf("\tvalord %s\n", $<id>-13);}
+
+    {printf("\tmete 1\n");}
+
+    {printf("\tadd\n");}
+
+    {printf("\tasigna\n");}
+
+    {printf("\tmete %d\n",$<num>-8);}
+
+    {printf("\tvalord %s\n", $<id>-13);}
+
+    {printf("\tsub\n");}
+
+    {printf("\tsifalsovea LBL %d\n", $<etiq>-5);}
+
+    {printf("\tvea LBL %d\n", $<etiq>-6);}
+
+    {printf("LBL%d:\n",$<etiq>-5);}
+
+    ;
+
+  
+
+  
+
+imprimeConByNum:
+
+    {printf("\tvalori %s\n", $<id>-15);}
+
+    {printf("\tvalord %s\n", $<id>-15);}
+
+    {printf("\tmete %d\n", $<num>-7);}
+
+    {printf("\tadd\n");}
+
+    {printf("\tasigna\n");}
+
+    {printf("\tmete %d\n",$<num>-9);}
+
+    {printf("\tvalord %s\n", $<id>-15);}
+
+    {printf("\tsub\n");}
+
+    {printf("\tsifalsovea LBL %d\n", $<etiq>-5);}
+
+    {printf("\tvea LBL %d\n", $<etiq>-6);}
+
+    {printf("LBL%d:\n",$<etiq>-5);}
+
+    ;
+
+
+
+
 
 
 
